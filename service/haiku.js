@@ -1,6 +1,7 @@
 var when = require('when');
 
-var monk = require('monk')('localhost/haiku');
+var env = require('../env.js');
+var monk = require('monk')(env.MONGODB);
 var haikus = monk.get('haiku');
 
 module.exports = {
