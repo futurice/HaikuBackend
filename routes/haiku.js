@@ -5,7 +5,7 @@ var service = require('../service/haiku');
 
 /* GET users listing. */
 router.get('/', function(req, res) {
-  res.render('haiku_list');
+  res.send('all haikus');//res.render('haiku_list');
 });
 
 router.post('/', function(req, res) {

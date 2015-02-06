@@ -7,7 +7,7 @@ var bodyParser = require('body-parser');
 var sass = require('node-sass-middleware');
 var path = require('path');
 
-//var routes = require('./routes/index');
+var index = require('./routes/index');
 //var users = require('./routes/users');
 var haiku = require('./routes/haiku');
 
@@ -31,8 +31,9 @@ app.use(
     })
 );
 app.use(express.static(path.join(__dirname, 'public')));
+app.use('/js', express.static(__dirname + '/bower_components'));
 
-//app.use('/', routes);
+app.use('/', index);
 app.use('/haiku', haiku);
 //app.use('/users', users);
 

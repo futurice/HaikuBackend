@@ -1,7 +1,13 @@
 doctype html
-html
+html(ng-app='HaikuBackend')
   head
     title= title
+
+    script(src='/js/angular/angular.min.js')
+    script(src='/js/angular-route/angular-route.min.js')
+
+    script(src='/app/app.js')
+
     link(rel='stylesheet', href='/css/style.css')
   body
     block content
