@@ -2,5 +2,8 @@ extends layout
 
 block content
   div(ng-controller='HaikuController')
-      h1 title
+      h1 Haikus
       p {{moi}}
+      div(ng-repeat='haiku in haikus')
+          h3 {{haiku.haiku}}
+          p by {{haiku.name}}

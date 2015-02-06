@@ -5,7 +5,12 @@ var service = require('../service/haiku');
 
 /* GET users listing. */
 router.get('/', function(req, res) {
-  res.send('all haikus');//res.render('haiku_list');
+
+    service.loadHaikus()
+        .then(function(data) {
+            res.send(data);
+        });
+
 });
 
 router.post('/', function(req, res) {

@@ -1,7 +1,7 @@
 var when = require('when');
 
 var env = require('../env.js');
-var monk = require('monk')(env.MONGODB);
+var monk = require('monk')(env.MONGODB || 'localhost/haiku');
 var haikus = monk.get('haiku');
 
 module.exports = {
@@ -29,6 +29,15 @@ module.exports = {
         else {
             def.reject({msg: invalid, invalid: true});
         }
+
+        return def.promise;
+    },
+    loadHaikus: function() {
+        var def = when.defer();
+
+        haikus.find().success(function(data) {
+            def.resolve(data);
+        });
 
         return def.promise;
     }
