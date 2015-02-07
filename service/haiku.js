@@ -13,7 +13,6 @@ module.exports = {
 
         if(!invalid) {
             haiku.accepted = false;
-            haiku.rejected = false;
 
             haikus.insert(haiku)
                 .success(function() {
