@@ -18,6 +18,15 @@ app.controller('HaikuController', ['$scope', 'HaikuService', function($scope, ha
             });
     };
 
+    $scope.reject = function(haiku) {
+        haikuService
+            .reject(haiku._id)
+            .done(function() {
+                loadAllHaikus();
+            });
+    };
+
+
 }]);
 
 app.factory('HaikuService', ['$http', function($http) {
@@ -36,6 +45,16 @@ app.factory('HaikuService', ['$http', function($http) {
             var def = $.Deferred();
 
             $http.put('/haiku/' + id, {accepted: true})
+                .success(function() {
+                    def.resolve();
+                });
+
+            return def.promise();
+        },
+        reject: function(id) {
+            var def = $.Deferred();
+
+            $http.put('/haiku/' + id, {accepted: false})
                 .success(function() {
                     def.resolve();
                 });
