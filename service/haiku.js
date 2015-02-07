@@ -13,6 +13,7 @@ module.exports = {
 
         if(!invalid) {
             haiku.accepted = false;
+            haiku.rejected = false;
 
             haikus.insert(haiku)
                 .success(function() {
@@ -35,6 +36,7 @@ module.exports = {
 
         haikus.find().success(function(data) {
             def.resolve(data);
+            console.log(data);
         });
 
         return def.promise;
@@ -75,16 +77,7 @@ module.exports = {
             .error(def.reject);
 
         return def.promise;
-    },
-    reject: function(id) {
-        var def = when.defer();
-
-        haikus.updateById(id, {accepted: false})
-            .success(def.resolve)
-            .error(def.reject);
-
-        return def.promise;
-    }    
+    }
 };
 
 function validate(haiku) {

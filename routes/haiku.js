@@ -46,7 +46,6 @@ router.put('/:id', function(req, res) {
     else {
       res.send('Nothing changed.');
       return;
-
     }
 
     modify.then(function() {
