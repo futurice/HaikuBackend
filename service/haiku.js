@@ -58,26 +58,26 @@ function validate(haiku) {
         return !value || value.trim() == '';
     }
 
-    if(isEmpty(haiku.name)) {
-        return 'name is empty';
+    if(isEmpty(haiku.nick)) {
+        return 'Nick is empty,';
     }
     else if(isEmpty(haiku.email)) {
-        return 'email is empty';
+        return 'Email is empty.';
     }
     else if(!haiku.email.match(/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/gi)) {
-        return 'invalid email';
+        return 'Invalid email.';
     }
     else if(isEmpty(haiku.phone)) {
-        return 'phone number is empty';
+        return 'Phone number is empty.';
     }
     else if(!haiku.phone.match(/[+0-9 ]+/gi)) {
-        return 'invalid phone number';
+        return 'Invalid phone number.';
     }
     else if(!haiku.haiku || haiku.haiku.trim().length < 10) {
-        return 'haiku is too short';
+        return 'Haiku is too short.';
     }
     else if(!haiku.haiku.trim().length > 1000) {
-        return 'haiku is too long';
+        return 'Haiku is too long.';
     }
 
     return null;

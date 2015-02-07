@@ -17,7 +17,7 @@ router.post('/', function(req, res) {
         console.log(req.body);
 
     service.createHaiku({
-        name:     req.body.name,
+        nick:     req.body.nick,
         email:    req.body.email,
         phone:    req.body.phone,
         haiku:    req.body.haiku
@@ -48,11 +48,11 @@ router.put('/:id', function(req, res) {
               res.send(200);
           })
           .catch(function() {
-              res.status(500).send('error');
+              res.status(500).send('Error.');
           });
   }
   else {
-      res.send('nothing changed');
+      res.send('Nothing changed.');
   }
 
 
