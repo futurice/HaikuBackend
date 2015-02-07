@@ -1,7 +1,6 @@
 var app = angular.module('HaikuBackend', ['ngRoute']);
 
 app.controller('HaikuController', ['$scope', 'HaikuService', function($scope, haikuService) {
-    $scope.moi = 'moi';
 
     haikuService
         .all()
@@ -16,6 +15,16 @@ app.factory('HaikuService', ['$http', function($http) {
             $http.get('/haiku')
                 .success(function(data) {
                     def.resolve(data);
+                });
+
+            return def.promise();
+        },
+        accept: function(id) {
+            var def = $.Deferred();
+
+            $http.put('haiku', {id: id})
+                .success(function() {
+                    def.resolve();
                 });
 
             return def.promise();

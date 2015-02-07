@@ -35,4 +35,20 @@ describe('HaikuService', function() {
 
     });
 
+    describe('accept()', function() {
+
+        it('should accept the haiku', function() {
+
+            var id = 'asd0eaa3';
+
+            $httpBackend.expectPUT('/haiku/' + id, {accept: true});
+
+            haikuService.accept(id);
+
+            $httpBackend.flush();
+
+        });
+
+    })
+
 });

@@ -1,9 +1,17 @@
 extends layout
 
 block content
-  div(ng-controller='HaikuController')
+  div.container(ng-controller='HaikuController')
       h1 Haikus
-      p {{moi}}
-      div(ng-repeat='haiku in haikus')
-          h3 {{haiku.haiku}}
-          p by {{haiku.name}}
+      div.ui.items.divided
+          div.item(ng-repeat='haiku in haikus')
+              div.content
+
+                  button.ui.button.red.reject(ng-click='reject(haiku)') Hylkää
+                  button.ui.button.green.accept(ng-click='accept(haiku)') Hyväksy
+
+                  div
+                      h2 {{haiku.haiku}}
+                      p by {{haiku.name}}
+
+

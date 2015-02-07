@@ -1,6 +1,6 @@
-body {
-  padding: 50px;
-  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif; }
+.container {
+  max-width: 800px;
+  margin: 0 auto; }
 
-a {
-  color: #00B7FF; }
+button.accept, button.reject {
+  float: right; }

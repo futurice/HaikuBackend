@@ -31,7 +31,7 @@ app.use(
     })
 );
 app.use(express.static(path.join(__dirname, 'public')));
-app.use('/js', express.static(__dirname + '/bower_components'));
+app.use('/lib', express.static(__dirname + '/bower_components'));
 
 app.use('/', index);
 app.use('/haiku', haiku);
