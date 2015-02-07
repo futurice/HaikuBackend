@@ -12,19 +12,20 @@ module.exports = {
         var invalid = validate(haiku);
 
         if(!invalid) {
-            var mongoPromise = haikus.insert(haiku);
+            haiku.accepted = false;
+            haiku.rejected = false;
 
-            mongoPromise.success(function() {
-                def.resolve('created');
+            haikus.insert(haiku)
+                .success(function() {
+                    def.resolve('created');
 
-                console.log(new Date(), 'created haiku');
-            });
+                    console.log(new Date(), 'created haiku');
+                })
+                .error(function(err) {
+                    def.reject({msg: err, internal: true});
 
-            mongoPromise.error(function(err) {
-                def.reject({msg: err, internal: true});
-
-                console.error(new Date(), 'failed creating haiku ', err);
-            });
+                    console.error(new Date(), 'failed creating haiku ', err);
+                });
         }
         else {
             def.reject({msg: invalid, invalid: true});
@@ -38,6 +39,15 @@ module.exports = {
         haikus.find().success(function(data) {
             def.resolve(data);
         });
+
+        return def.promise;
+    },
+    accept: function(id) {
+        var def = when.defer();
+
+        haikus.updateById(id, {accepted: true})
+            .success(def.resolve)
+            .error(def.reject);
 
         return def.promise;
     }

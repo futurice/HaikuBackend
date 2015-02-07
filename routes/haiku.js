@@ -14,28 +14,47 @@ router.get('/', function(req, res) {
 });
 
 router.post('/', function(req, res) {
-  console.log(req.body);
+        console.log(req.body);
 
-  service.createHaiku({
-      name:     req.body.name,
-      email:    req.body.email,
-      phone:    req.body.phone,
-      haiku:    req.body.haiku
-  }).then(function(result) {
-      res.send(result);
-  }).catch(function(err) {
+    service.createHaiku({
+        name:     req.body.name,
+        email:    req.body.email,
+        phone:    req.body.phone,
+        haiku:    req.body.haiku
+    }).then(function(result) {
+        res.send(result);
+    }).catch(function(err) {
 
-      if(err.internal) {
+
+        if(err.internal) {
           res.status(500).send(err.msg);
-      }
-      else if(err.invalid) {
+        }
+        else if(err.invalid) {
           res.status(400).send(err.msg);
-      }
-      else {
+        }
+        else {
           res.status(500).send(err);
-      }
+        }
 
-  });
+    });
+
+});
+
+router.put('/:id', function(req, res) {
+
+  if(req.body.accepted) {
+      service.accept(req.param['id'])
+          .then(function() {
+              res.send(200);
+          })
+          .catch(function() {
+              res.status(500).send('error');
+          });
+  }
+  else {
+      res.send('nothing changed');
+  }
+
 
 
 });

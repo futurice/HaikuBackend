@@ -21,6 +21,12 @@ describe('HaikuController', function() {
         }
     }
 
+    function getResolvedPromise() {
+        var def = $.Deferred();
+        def.resolve();
+        return def.promise();
+    }
+
     describe('init', function() {
         it('should get all haikus to $scope.haikus', function() {
 
@@ -29,7 +35,7 @@ describe('HaikuController', function() {
             };
 
             var $scope = {};
-            var controller = $controller('HaikuController', { $scope: $scope, HaikuService: haikuService });
+            $controller('HaikuController', { $scope: $scope, HaikuService: haikuService });
 
             expect($scope.haikus.length).toEqual(3);
         });
@@ -38,19 +44,22 @@ describe('HaikuController', function() {
     describe('acceptance', function() {
        it('should send acceptance and reload haikus', function() {
 
-           var acceptanceSent = false;
+           var id = 'asdq3eqda2d';
+           var acceptedId = null;
 
            var haikuService = {
-               accept: function() { acceptanceSent = true; },
+               accept: function(id) {
+                   acceptedId = id;
+                   return getResolvedPromise(); },
                all: allHaikusMock([{}])
            };
 
            var $scope = {};
            var controller = $controller('HaikuController', { $scope: $scope, HaikuService: haikuService });
 
-           
+           $scope.accept({name:"Matias", _id:id});
 
-           expect(acceptanceSent).toBe(true);
+           expect(acceptedId).toBe(id);
 
            expect($scope.haikus.length).toBe(1)
 

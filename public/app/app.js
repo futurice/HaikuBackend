@@ -2,9 +2,22 @@ var app = angular.module('HaikuBackend', ['ngRoute']);
 
 app.controller('HaikuController', ['$scope', 'HaikuService', function($scope, haikuService) {
 
-    haikuService
-        .all()
-        .done(function(all) { $scope.haikus = all; });
+    function loadAllHaikus() {
+        haikuService
+            .all()
+            .done(function(all) { $scope.haikus = all; });
+    }
+
+    loadAllHaikus();
+
+    $scope.accept = function(haiku) {
+        haikuService
+            .accept(haiku._id)
+            .done(function() {
+                loadAllHaikus();
+            });
+    };
+
 }]);
 
 app.factory('HaikuService', ['$http', function($http) {
@@ -22,7 +35,7 @@ app.factory('HaikuService', ['$http', function($http) {
         accept: function(id) {
             var def = $.Deferred();
 
-            $http.put('haiku', {id: id})
+            $http.put('/haiku/' + id, {accepted: true})
                 .success(function() {
                     def.resolve();
                 });

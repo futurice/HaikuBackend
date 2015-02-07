@@ -21,7 +21,12 @@ frisby.create('Create new haiku')
 frisby.create('List haikus')
     .get('http://localhost:3000/haiku')
     .expectJSONLength(1)
-    .expectJSON([{name: "Matias"}])
+    .expectJSON('0',{
+        name: "Matias",
+        accepted: false,
+        rejected: false,
+        _id: function(id) { haikuId = id; }
+    })
     .toss();
 
 frisby.create('Haiku creation fails')
@@ -33,6 +38,27 @@ frisby.create('Haiku creation fails')
     }, {json: true})
     .expectStatus(400)
     .toss();
+
+require('monk')('localhost/haiku').get('haiku').find({}).then(function(data) {
+    console.log('last tests');
+
+    var haikuId = data[0]._id;
+
+    frisby.create('Accept haiku')
+        .put('http://localhost:3000/haiku/'+ haikuId, {
+            accepted: true
+        }, {json: true})
+        .expectStatus(200)
+        .toss();
+
+    frisby.create('Haiku has been accepted')
+        .get('http://localhost:3000/haiku')
+        .expectJSON([{name: "Matias", _id: haikuId, accepted: true }])
+        .toss();
+
+});
+
+
 
 /*frisby.create('Haikus has been created')
     .get('http://localhost:3000/haiku')

@@ -8,7 +8,8 @@ describe('HaikuService', function() {
         // Set up the mock http service responses
         $httpBackend = $injector.get('$httpBackend');
         // backend definition common for all tests
-        authRequestHandler = $httpBackend.when('GET', '/haiku').respond([{},{},{}]);
+        $httpBackend.when('GET', '/haiku').respond([{},{},{}]);
+        $httpBackend.when('PUT', /\/haiku\/.*/).respond({});
 
         // The $controller service is used to create instances of controllers
         haikuService = _HaikuService_;
@@ -41,7 +42,7 @@ describe('HaikuService', function() {
 
             var id = 'asd0eaa3';
 
-            $httpBackend.expectPUT('/haiku/' + id, {accept: true});
+            $httpBackend.expectPUT('/haiku/' + id, {accepted: true});
 
             haikuService.accept(id);
 
