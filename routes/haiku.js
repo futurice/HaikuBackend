@@ -1,21 +1,16 @@
 var express = require('express');
-var router = express.Router();
-
 var service = require('../service/haiku');
+var router = express.Router();
 
 /* GET users listing. */
 router.get('/', function(req, res) {
-
     service.loadHaikus()
         .then(function(data) {
             res.send(data);
         });
-
 });
 
 router.post('/', function(req, res) {
-        console.log(req.body);
-
     service.createHaiku({
         nick:     req.body.nick,
         email:    req.body.email,
@@ -24,8 +19,6 @@ router.post('/', function(req, res) {
     }).then(function(result) {
         res.send(result);
     }).catch(function(err) {
-
-
         if(err.internal) {
           res.status(500).send(err.msg);
         }
@@ -35,13 +28,10 @@ router.post('/', function(req, res) {
         else {
           res.status(500).send(err);
         }
-
     });
-
 });
 
 router.put('/:id', function(req, res) {
-
   if(req.body.accepted) {
       service.accept(req.param['id'])
           .then(function() {
@@ -54,9 +44,6 @@ router.put('/:id', function(req, res) {
   else {
       res.send('Nothing changed.');
   }
-
-
-
 });
 
 module.exports = router;
