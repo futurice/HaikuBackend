@@ -50,6 +50,22 @@ describe('HaikuService', function() {
 
         });
 
-    })
+    });
+
+    describe('reject()', function() {
+
+        it('should accept the haiku', function() {
+
+            var id = 'asd0eaa3';
+
+            $httpBackend.expectPUT('/haiku/' + id, {rejected: true});
+
+            haikuService.reject(id);
+
+            $httpBackend.flush();
+
+        });
+
+    });
 
 });

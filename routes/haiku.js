@@ -42,20 +42,31 @@ router.post('/', function(req, res) {
 
 router.put('/:id', function(req, res) {
 
-  if(req.body.accepted) {
-      service.accept(req.param['id'])
-          .then(function() {
-              res.send(200);
-          })
-          .catch(function() {
-              res.status(500).send('Error.');
-          });
-  }
-  else {
+    var modify = null;
+
+    if(req.body.accepted) {
+      modify = service.accept(req.params['id']);
+    }
+    else if(req.body.rejected) {
+      modify = service.reject(req.params['id']);
+    }
+    else {
       res.send('Nothing changed.');
-  }
+      return;
 
+    }
 
+    modify.then(function() {
+        res.status(200).send('Modified.');
+    })
+    .catch(function(err) {
+        if(err.forbidden) {
+            res.status(403).send(err.msg);
+        }
+        else {
+            res.status(500).send('Error.');
+        }
+    });
 
 });
 

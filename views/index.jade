@@ -3,15 +3,22 @@ extends layout
 block content
   div.container(ng-controller='HaikuController')
       h1 Haikus
+
+
+      div.ui.buttons.show-selector
+          button.ui.button(ng-click='show("new")',ng-class='{active: showOnly=="new"}') New
+          button.ui.button(ng-click='show("accepted")',ng-class='{active: showOnly=="accepted"}') Accepted
+          button.ui.button(ng-click='show("rejected")',ng-class='{active: (showOnly=="rejected")}') Rejected
+
       div.ui.items.divided
           div.item(ng-repeat='haiku in haikus')
               div.content
 
-                  button.ui.button.red.reject(ng-click='reject(haiku)') Hylkää
-                  button.ui.button.green.accept(ng-click='accept(haiku)') Hyväksy
+                  button.ui.button.red.reject(ng-click='reject(haiku)',ng-disabled='haiku.actionsDisabled',ng-class='{disabled:haiku.actionsDisabled}') Reject
+                  button.ui.button.green.accept(ng-click='accept(haiku)',ng-disabled='haiku.actionsDisabled',ng-class='{disabled:haiku.actionsDisabled}') Accept
 
                   div
                       h2 {{haiku.haiku}}
-                      p by {{haiku.name}}
+                      p by {{haiku.nick}}
 
 

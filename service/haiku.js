@@ -45,7 +45,35 @@ module.exports = {
     accept: function(id) {
         var def = when.defer();
 
-        haikus.updateById(id, {accepted: true})
+        console.log('accept %s', id);
+
+        haikus.findOne({_id: id})
+            .success(function(haiku) {
+
+                console.log(haiku);
+
+                if(!haiku.rejected) {
+                    haikus.update({ _id: id }, { $set: {accepted: true} })
+                        .success(def.resolve)
+                        .error(def.reject);
+                }
+                else {
+                    def.reject({forbidden: true, msg: "Forbidden to accept rejected haiku."});
+                }
+
+            })
+            .error(function() {
+                def.reject();
+            });
+
+        return def.promise;
+    },
+    reject: function(id) {
+        var def = when.defer();
+
+        console.log('reject %s', id);
+
+        haikus.update({ _id: id }, { $set: {rejected: true} })
             .success(def.resolve)
             .error(def.reject);
 
