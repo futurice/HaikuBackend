@@ -28,34 +28,58 @@ describe('HaikuController', function() {
     }
 
     describe('init', function() {
-        it('should get all haikus to $scope.haikus', function() {
 
+        var $scope = {};
+
+        beforeEach(function() {
             var haikuService = {
-                all: allHaikusMock([{},{},{}])
+                all: allHaikusMock([{rejected: true},{accepted: true},{}])
             };
 
-            var $scope = {};
             $controller('HaikuController', { $scope: $scope, HaikuService: haikuService });
-
-            expect($scope.haikus.length).toEqual(3);
         });
+
+        it('should get all haikus to $scope.haikus', function() {
+            expect($scope.allHaikus.length).toEqual(3);
+        });
+
+        it('should filter haikus instantly', function() {
+            expect($scope.haikus.length).toEqual(1);
+        });
+
+        it('should mark actionsDisabled in accepted and rejected haikus', function() {
+            expect($scope.allHaikus[0].actionsDisabled).toBe(true);
+            expect($scope.allHaikus[2].actionsDisabled).toBe(false);
+        });
+
     });
 
-    describe('acceptance', function() {
-       it('should send acceptance and reload haikus', function() {
+    describe('acceptance and rejection', function() {
 
-           var id = 'asdq3eqda2d';
-           var acceptedId = null;
+        var id, haikuService, $scope;
 
-           var haikuService = {
-               accept: function(id) {
-                   acceptedId = id;
-                   return getResolvedPromise(); },
+        beforeEach(function() {
+           id = 'asdq3eqda2d';
+
+           haikuService = {
                all: allHaikusMock([{}])
            };
 
-           var $scope = {};
-           var controller = $controller('HaikuController', { $scope: $scope, HaikuService: haikuService });
+           $scope = {};
+           $controller('HaikuController', { $scope: $scope, HaikuService: haikuService });
+        });
+
+        afterEach(function() {
+           $scope.allHaikus = [];
+        });
+
+        it('should send acceptance and reload haikus', function() {
+           var acceptedId = null;
+
+           haikuService.accept = function(id) {
+               acceptedId = id;
+               return getResolvedPromise();
+           }
 
            $scope.accept({name:"Matias", _id:id});
 
@@ -63,6 +87,54 @@ describe('HaikuController', function() {
 
            expect($scope.haikus.length).toBe(1)
 
-       });
+        });
+
+        it('should send rejection and reload haikus', function() {
+
+            var rejectedId = null;
+
+            haikuService.reject = function(id) {
+                rejectedId = id;
+                return getResolvedPromise();
+            }
+
+            $scope.reject({name:"Matias", _id:id});
+
+            expect(rejectedId).toBe(id);
+
+            expect($scope.haikus.length).toBe(1)
+
+        });
+    });
+
+    describe('filter selector', function() {
+
+        var $scope;
+
+        beforeEach(function() {
+            var haikuService = {
+                all: allHaikusMock([{rejected: true},{accepted: true},{}])
+            };
+
+            $scope = {};
+            $controller('HaikuController', { $scope: $scope, HaikuService: haikuService });
+        });
+
+        it('should initially set showOnly to new', function() {
+            expect($scope.showOnly).toBe('new');
+        });
+
+        it('should set showOnly to selected filter', function() {
+            $scope.show('accepted');
+
+            expect($scope.showOnly).toBe('accepted');
+        });
+
+        it('should filter haiku list with selected filter', function() {
+            $scope.show('accepted');
+
+            expect($scope.haikus.length).toBe(1);
+        });
+
     });
 });
