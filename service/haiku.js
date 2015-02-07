@@ -17,13 +17,11 @@ module.exports = {
             haikus.insert(haiku)
                 .success(function() {
                     def.resolve('created');
-
-                    console.log(new Date(), 'created haiku');
+                    console.log(new Date(), 'Created haiku.');
                 })
                 .error(function(err) {
                     def.reject({msg: err, internal: true});
-
-                    console.error(new Date(), 'failed creating haiku ', err);
+                    console.error(new Date(), 'Failed to create haiku: ', err);
                 });
         }
         else {
@@ -49,7 +47,16 @@ module.exports = {
             .error(def.reject);
 
         return def.promise;
-    }
+    },
+    reject: function(id) {
+        var def = when.defer();
+
+        haikus.updateById(id, {accepted: false})
+            .success(def.resolve)
+            .error(def.reject);
+
+        return def.promise;
+    }    
 };
 
 function validate(haiku) {
