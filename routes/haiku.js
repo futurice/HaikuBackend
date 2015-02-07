@@ -1,6 +1,7 @@
 var express = require('express');
 var service = require('../service/haiku');
 var router = express.Router();
+var randtoken = require('rand-token');
 
 /* GET users listing. */
 router.get('/', function(req, res) {
@@ -15,7 +16,8 @@ router.post('/', function(req, res) {
         nick:     req.body.nick,
         email:    req.body.email,
         phone:    req.body.phone,
-        haiku:    req.body.haiku
+        haiku:    req.body.haiku,
+        token:    randtoken.generate(16)
     }).then(function(result) {
         res.send(result);
     }).catch(function(err) {

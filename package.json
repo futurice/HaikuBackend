@@ -17,7 +17,8 @@
     "node-sass-middleware": "~0.4.0",
     "when": "~3.7.2",
     "monk": "~0.9.1",
-    "bower": "*"
+    "bower": "*",
+    "rand-token": "~0.2.1"
   },
   "devDependencies": {
     "jasmine-core": "^2.2.0",
