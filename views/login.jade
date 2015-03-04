@@ -1,0 +1,10 @@
+extends layout
+
+block content
+  form(action='/login', method='post')
+    div
+      input(id='username', type='text', name='username', placeholder='username')
+    div
+      input(id='password', type='password', name='password', placeholder='password')
+    div
+      input(type='submit', value='Login')

@@ -6,6 +6,57 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var sass = require('node-sass-middleware');
 var path = require('path');
+var env = require('./env.js');
+var passport = require('passport');
+var LocalStrategy = require('passport-local').Strategy;
+var session = require('express-session');
+
+var users = [
+    {id: 1, username: env.USERNAME, password: env.PASSWORD}
+    ];
+
+function findById(id, fn) {
+    var idx = id - 1;
+    if (users[idx]) {
+        fn(null, users[idx]);
+    } else {
+        fn(new Error('User ' + id + ' does not exist'));
+    }
+}
+
+function findByUsername(username, fn) {
+    for (var i = 0, len = users.length; i < len; i++) {
+        var user = users[i];
+        if (user.username === username) {
+            return fn(null, user)
+        }
+    }
+    return fn(null, null)
+}
+
+passport.serializeUser(function (user, done) {
+    done(null, user.id);
+});
+
+passport.deserializeUser(function (id, done) {
+    findById(id, function (err, user) {
+        done(err, user);
+    });
+});
+
+passport.use(new LocalStrategy(
+    function (username, password, done) {
+        process.nextTick(function () {
+
+            findByUsername(username, function(err, user) {
+                if (err) { return done(err); }
+                if (!user) { return done(null, false); }
+                if (user.password != password) { return done(null, false); }
+                return done(null, user);
+            });
+        });
+    }
+));
 
 var index = require('./routes/index');
 //var users = require('./routes/users');
@@ -33,9 +84,32 @@ app.use(
 app.use(express.static(path.join(__dirname, 'public')));
 app.use('/lib', express.static(__dirname + '/bower_components'));
 
+app.use(session({
+    secret: env.SECRET_KEY
+}))
+
+// Passport settings
+app.use(passport.initialize());
+app.use(passport.session());
+
 app.use('/', index);
 app.use('/haiku', haiku);
 //app.use('/users', users);
+
+app.get('/login', function (req, res) {
+    res.render('login', { user: req.user });
+})
+
+app.post('/login',
+    passport.authenticate('local', { failureRedirect: '/login' }),
+    function (req, res) {
+        res.redirect('/');
+    });
+
+app.get('/logout', function (req, res) {
+    req.logout();
+    res.redirect('/login');
+});
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
