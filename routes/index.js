@@ -2,7 +2,7 @@ var express = require('express');
 var router = express.Router();
 
 function ensureAuthenticated(req, res, next) {
-    if (req.isAuthenticated()) { return next(); }
+    if (req.isAuthenticated() && req.user.role === 'admin') { return next(); }
     res.redirect('/login');
 }
 

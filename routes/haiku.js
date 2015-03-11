@@ -1,17 +1,16 @@
 var express = require('express');
 var service = require('../service/haiku');
-var router = express.Router();
 var randtoken = require('rand-token');
 
 /* GET users listing. */
-router.get('/', function(req, res) {
+exports.getHaikus = function(req, res) {
     service.loadHaikus()
         .then(function(data) {
             res.send(data);
         });
-});
+};
 
-router.post('/', function(req, res) {
+exports.postHaiku = function(req, res) {
     service.createHaiku({
         nick:     req.body.nick,
         email:    req.body.email,
@@ -31,9 +30,9 @@ router.post('/', function(req, res) {
           res.status(500).send(err);
         }
     });
-});
+};
 
-router.put('/:id', function(req, res) {
+exports.putHaiku = function(req, res) {
 
     var modify = null;
 
@@ -60,6 +59,4 @@ router.put('/:id', function(req, res) {
         }
     });
 
-});
-
-module.exports = router;
+};

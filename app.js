@@ -9,10 +9,12 @@ var path = require('path');
 var env = require('./env.js');
 var passport = require('passport');
 var LocalStrategy = require('passport-local').Strategy;
+var DigestStrategy = require('passport-http').DigestStrategy;
 var session = require('express-session');
 
 var users = [
-    {id: 1, username: env.USERNAME, password: env.PASSWORD}
+    {id: 1, username: env.USERNAME, password: env.PASSWORD, role:'admin'},
+    {id: 2, username: env.WAPPUFI_USERNAME, password: env.WAPPUFI_PASSWORD, role:'client'}
     ];
 
 function findById(id, fn) {
@@ -58,6 +60,27 @@ passport.use(new LocalStrategy(
     }
 ));
 
+passport.use(new DigestStrategy({ qop: 'auth' },
+    function (username, done) {
+        findByUsername(username, function(err, user) {
+            if (err) { return done(err); }
+            if (!user) { return done(null, false); }
+            return done(null, user, user.password);
+        });
+    },
+    function (params, done) {
+
+        process.nextTick(function () {
+            done(null, true);
+        });
+    }
+));
+
+function ensureAuthenticated(req, res, next) {
+    if (req.isAuthenticated() && req.user.role === 'admin') { return next(); }
+    res.redirect('/login');
+}
+
 var index = require('./routes/index');
 //var users = require('./routes/users');
 var haiku = require('./routes/haiku');
@@ -93,7 +116,9 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 app.use('/', index);
-app.use('/haiku', haiku);
+app.get('/haiku', ensureAuthenticated, haiku.getHaikus);
+app.post('/haiku', passport.authenticate('digest', { session: false }), haiku.postHaiku);
+app.put('/haiku/:id', ensureAuthenticated, haiku.putHaiku);
 //app.use('/users', users);
 
 app.get('/login', function (req, res) {

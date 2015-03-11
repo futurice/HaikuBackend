@@ -24,7 +24,8 @@
     "rand-token": "~0.2.1",
     "passport": "~0.2.1",
     "passport-local": "~1.0.0",
-    "express-session": "~1.10.3"
+    "express-session": "~1.10.3",
+    "passport-http": "~0.2.2"
   },
   "devDependencies": {
     "jasmine-core": "^2.2.0",
