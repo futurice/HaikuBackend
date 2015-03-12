@@ -58,5 +58,18 @@ exports.putHaiku = function(req, res) {
             res.status(500).send('Error.');
         }
     });
+};
 
+exports.getAcceptedHaikus = function (req, res) {
+    service.loadAcceptedHaikus()
+        .then(function(data) {
+            res.send(data);
+        });
+}
+
+exports.getRandomHaikus = function (req, res) {
+    service.loadRandomHaikus()
+        .then(function(data) {
+            res.send(data);
+        });
 };

@@ -119,6 +119,8 @@ app.use('/', index);
 app.get('/haiku', ensureAuthenticated, haiku.getHaikus);
 app.post('/haiku', passport.authenticate('digest', { session: false }), haiku.postHaiku);
 app.put('/haiku/:id', ensureAuthenticated, haiku.putHaiku);
+app.get('/accepted', haiku.getAcceptedHaikus);
+app.get('/random', haiku.getRandomHaikus);
 //app.use('/users', users);
 
 app.get('/login', function (req, res) {

@@ -77,6 +77,37 @@ module.exports = {
             .error(def.reject);
 
         return def.promise;
+    },
+    loadRandomHaikus: function() {
+        var def = when.defer();
+
+        haikus.find({ accepted: true}, {fields : { email:0, phone:0, token:0,
+            accepted:0, rejected:0}}).success(function(data) {
+                var random_data = [];
+
+                for (var i = 0; i < 3; i++) {
+                    var len = data.length;
+                    if (len > 0) {
+                        var random_index = Math.floor((Math.random() * len) + 1) - 1;
+                        random_data[i] = data[random_index];
+                        data.splice(random_index, 1);
+                    }
+                }
+                def.resolve(random_data);
+            });
+
+        return def.promise;
+    },
+    loadAcceptedHaikus: function() {
+        var def = when.defer();
+
+        haikus.find({ accepted: true }, {fields : { email:0, phone:0, token:0,
+        accepted:0, rejected:0 }}).success(function(data) {
+            def.resolve(data);
+            console.log(data);
+        });
+
+        return def.promise;
     }
 };
 
