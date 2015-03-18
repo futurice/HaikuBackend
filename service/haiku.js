@@ -125,10 +125,7 @@ function validate(haiku) {
     else if(!haiku.email.match(/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/gi)) {
         return 'Invalid email.';
     }
-    else if(isEmpty(haiku.phone)) {
-        return 'Phone number is empty.';
-    }
-    else if(!haiku.phone.match(/[+0-9 ]+/gi)) {
+    else if(!haiku.phone.match(/[+0-9 ]+/gi) && !(isEmpty(haiku.phone))) {
         return 'Invalid phone number.';
     }
     else if(!haiku.haiku || haiku.haiku.trim().length < 10) {
