@@ -3,6 +3,11 @@ var when = require('when');
 var env = require('../env.js');
 var monk = require('monk')(env.MONGODB || 'localhost/haiku');
 var haikus = monk.get('haiku');
+var twitterAPI = require('node-twitter-api');
+var twitter = new twitterAPI({
+    consumerKey: env.TWITTER_CONSUMER_KEY,
+    consumerSecret: env.TWITTER_CONSUMER_SECRET,
+});
 
 module.exports = {
     createHaiku: function(haiku) {
@@ -53,7 +58,10 @@ module.exports = {
 
                 if(!haiku.rejected) {
                     haikus.update({ _id: id }, { $set: {accepted: true} })
-                        .success(def.resolve)
+                        .success(function() {
+                            postToTwitter(haiku.nick, haiku.haiku)
+                            .done(def.resolve)
+                        })
                         .error(def.reject);
                 }
                 else {
@@ -136,4 +144,24 @@ function validate(haiku) {
     }
 
     return null;
+}
+
+function postToTwitter(nick, haiku) {
+    var def = when.defer();
+
+    twitter.statuses('update', {
+        status: haiku + ' by ' + nick + ' #futuhaiku'
+    },
+    env.TWITTER_TOKEN,
+    env.TWITTER_TOKEN_SECRET,
+    function (err, data, response) {
+        if (err) {
+            console.log('Twitter could not be reached');
+            def.resolve();
+        } else {
+            def.resolve(data);
+        }
+    });
+
+    return def.promise;
 }

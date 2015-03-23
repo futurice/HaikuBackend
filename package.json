@@ -25,7 +25,8 @@
     "passport": "~0.2.1",
     "passport-local": "~1.0.0",
     "express-session": "~1.10.3",
-    "passport-http": "~0.2.2"
+    "passport-http": "~0.2.2",
+    "node-twitter-api": "~1.5.0"
   },
   "devDependencies": {
     "jasmine-core": "^2.2.0",
