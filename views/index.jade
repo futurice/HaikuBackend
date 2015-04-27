@@ -4,7 +4,7 @@ block content
   div.container(ng-controller='HaikuController')
       h1 Haikus
       a(href='/logout') logout
-
+      p Amount of listed Haikus: {{haikus.length}}
 
       div.ui.buttons.show-selector
           button.ui.button(ng-click='show("new")',ng-class='{active: showOnly=="new"}') New
